@@ -239,7 +239,7 @@ option:not(:first-of-type) {
 
     padding: 12px 2px;
 
-    min-width: 12px;
+    min-width: 65px;
 }
 
 .calcTable .itemsTable__table td:first-child {
