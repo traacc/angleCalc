@@ -49,7 +49,6 @@ function addTableItem(){
     let amt = Number(amount.value);
     let ang = Number(angle.value);
     
-    alert(ang);
    
     amount.reportValidity();
     thickness.reportValidity();
