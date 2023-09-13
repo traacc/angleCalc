@@ -45,8 +45,8 @@ function addTableItem(){
     tableId++;
     
     let dnv = Number(dn.value);
-    let tv = Number(thickness.value);
-    let amt = Number(amount.value);
+    let tv = Number(thickness.value.replace(/,/g, '.'));
+    let amt = Number(amount.value.replace(/,/g, '.'));
     let ang = Number(angle.value);
     
    
@@ -61,10 +61,10 @@ function addTableItem(){
         typeEl = "Рулон";
     else
         typeEl = "Трубка";
-    let thicknessValue = thickness.value;
+    let thicknessValue = tv;
     let dnValue = dn.value;
     let radiusValue = angle[angle.selectedIndex].textContent;
-    let amountValue = amount.value;
+    let amountValue = amt;
 
     let rollMatValue = calcRollMaterial(dnv, tv, amt, ang);;
     let tapeMatValue = calcTapeMaterial(dnv, ang);
