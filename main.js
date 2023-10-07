@@ -18,9 +18,9 @@ const amountCoverMaterialTotals = calc.querySelector('.amountCoverMaterial .calc
 
 let selectedType = 'roll';
 
-const dnValues = {21.3:21.3, 26.8:26.8, 32:32, 33.5:33.5,38:38,42.3:42.3,45:45,48:48,57:57,60:60,76:76,89:89,108:108,114:114,133:133,159:159,219:219,273:273,325:325,377:377,426:426};;
-const dnValuesPipes90 = {21.3:21.3, 26.8:26.8, 32:32, 33.5:33.5,38:38,42.3:42.3,45:45,48:48,57:57,60:60,76:76,89:89,108:108,114:114,133:133,159:159};
-const dnValuesPipes45 = {21.3:21.3, 26.8:26.8, 33.5:33.5, 45:45, 48:48 ,60:60, 76:76, 89:89, 114:114, 133:133, 159:159};
+const dnValues = [21.3, 26.8, 32.0, 33.5,38,42.3,45,48,57,60,76,89,108,114,133,159,219,273,325,377,426];
+const dnValuesPipes90 = [21.3, 26.8, 32, 33.5,38,42.3,45,48,57,60,76,89,108,114,133,159];
+const dnValuesPipes45 = [21.3, 26.8, 33.5, 45, 48 ,60, 76, 89, 114, 133, 159];
 const angleValues = {90:1, 60:1.5, 45:2, 30:3};
 const angleValuesPipes = {90:1, 45:2};
 
@@ -32,11 +32,11 @@ const { jsPDF } = window.jspdf;
 function changeType(type) {
     if(type=="pipes"){
         selectedType = "pipes";
-        dn.innerHTML = generateItems(dnValuesPipes90, "DN отвода");
+        dn.innerHTML = generateItemsDn(dnValuesPipes90);
         angle.innerHTML = generateItems(angleValuesPipes, "Угол отвода");
     } else {
         selectedType = "rolls";
-        dn.innerHTML = generateItems(dnValues, "DN отвода");
+        dn.innerHTML = generateItemsDn(dnValues);
         angle.innerHTML = generateItems(angleValues, "Угол отвода");
     }
 }
@@ -152,11 +152,11 @@ angle.addEventListener("change", ()=>{
     if(selectedType=='pipes') {
         let curValue = dn.value;
         if(angle.value==1){
-            dn.innerHTML = generateItems(dnValuesPipes90, "DN отвода");
+            dn.innerHTML = generateItemsDn(dnValuesPipes90);
             dn.value = curValue;
         }
         else {
-            dn.innerHTML = generateItems(dnValuesPipes45, "DN отвода");
+            dn.innerHTML = generateItemsDn(dnValuesPipes45);
             if(!dnValuesPipes45.hasOwnProperty(curValue)){
                 dn.value = "";
             }
@@ -176,6 +176,15 @@ function generateItems(itemObj, placeholder){
     console.log(itemObj);
     for(let item in itemObj) {
         html += `<option value="${itemObj[item]}">${item}</option>`
+    }
+    return html;
+}
+
+function generateItemsDn(itemObj){
+    let html = `<option value="" disabled selected>DN отвода</option>`;
+    console.log(itemObj);
+    for(let item of itemObj) {
+        html += `<option value="${item}">${item}</option>`
     }
     return html;
 }
@@ -408,7 +417,7 @@ document.querySelector('.calcGeneratePdf').addEventListener('click',()=>{
 });
 
 document.addEventListener("DOMContentLoaded",()=>{
-    dn.innerHTML = generateItems(dnValues, "DN отвода");
+    dn.innerHTML = generateItemsDn(dnValues);
     angle.innerHTML = generateItems(angleValues, "Угол отвода");
     changeType("rolls");
     document.querySelector('.inputBlockTypes input[data-calctype="roll"]').checked = true;
