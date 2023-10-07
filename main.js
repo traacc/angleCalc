@@ -67,9 +67,19 @@ function addTableItem(){
     let amountValue = amt;
 
     let rollMatValue = calcRollMaterial(dnv, tv, amt, ang);;
-    let tapeMatValue = calcTapeMaterial(dnv, ang);
+
+    let tapeMatValue = calcTapeMaterial(dnv, ang) * amt;
 
     let coverMatValue = calcCoverMaterial(dnv, tv, amt, ang);
+
+    if(selectedType=="rolls") {
+        tapeMatValue = 0;
+    } else {
+        coverMatValue = rollMatValue;
+        rollMatValue = 0;
+    }
+
+
     let glueValue = calcAmountGlue(dnv, tv, amt, ang);
     let cleanerValue = calcAmountCleaner(dnv, tv, amt, ang);
     let tapeValue = calcAmountTape(dnv, tv, amt, ang);
@@ -139,12 +149,21 @@ amount.addEventListener("keyup",(e)=>{
     }
 });
 angle.addEventListener("change", ()=>{
-    if(selectedType=='pipes')
-        if(angle.value==1)
+    if(selectedType=='pipes') {
+        let curValue = dn.value;
+        if(angle.value==1){
             dn.innerHTML = generateItems(dnValuesPipes90, "DN отвода");
-        else 
+            dn.value = curValue;
+        }
+        else {
             dn.innerHTML = generateItems(dnValuesPipes45, "DN отвода");
-    dn.value = "";
+            if(!dnValuesPipes45.hasOwnProperty(curValue)){
+                dn.value = "";
+            }
+        }
+        
+    }
+    //dn.value = "";
 });
 document.querySelectorAll('.inputBlockTypes input[type="radio"]').forEach((el)=>{
     el.addEventListener('click', ()=>{
@@ -185,28 +204,7 @@ function getLenArcOut(dn, angle) {
 }
 
 function calcRollMaterial(dn, thickness, amount, angle) {
-    let pipeValues ={
-        21.3: 0.012,
-        26.8: 0.010,
-        32: 0.009,
-        33.5: 0.007,
-        38: 0.024,
-        42.3: 0.028,
-        45: 0.031,
-        48: 0.035,
-        57: 0.047,
-        60: 0.051,
-        76: 0.089,
-        89: 0.118,
-        108: 0.167,
-        114: 0.185,
-        133: 0.245,
-        159: 0.343
-    };
-    if(selectedType=="rolls")
-        return (2*(2*mmInM(dn)+2*mmInM(thickness))**2)*getSt(dn)*amount/angle;
-    else
-        return pipeValues[dn]*0.9;
+    return (2*(2*mmInM(dn)+2*mmInM(thickness))**2)*getSt(dn)*amount/angle;
 }
 
 function calcTapeMaterial(dn, angle) {
@@ -328,7 +326,7 @@ function headerTable(h) {
     pdfDoc.text(5, h, "Тип", {maxWidth:'12'});
     pdfDoc.text(15, h, "Толщина изоляции (мм)", {maxWidth:'20'});
     pdfDoc.text(35, h, "DN отвода (мм)", {maxWidth:'12'});
-    pdfDoc.text(55, h, "Радиус отвода (мм)", {maxWidth:'12'});
+    pdfDoc.text(55, h, "Угол отвода (°)", {maxWidth:'12'});
     pdfDoc.text(75, h, "Количество (шт)", {maxWidth:'12'});
     pdfDoc.text(95, h, "Руллоный материал (м²)", {maxWidth:'17'});
     pdfDoc.text(115, h, "Трубный материал (м.п.)", {maxWidth:'17'});
